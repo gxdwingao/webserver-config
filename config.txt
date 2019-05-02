@@ -1,0 +1,63 @@
+## locate
+yum -y install mlocate
+updatedb
+
+## Git
+yum install git
+
+## MySQL
+wget -i -c http://dev.mysql.com/get/mysql57-community-release-el7-10.noarch.rpm
+yum -y install mysql57-community-release-el7-10.noarch.rpm
+yum -y install mysql-community-server
+systemctl start? mysqld.service
+#init mysql password
+grep "password" /var/log/mysqld.log
+mysql -uroot -p
+set global validate_password_policy=0;
+ALTER?USER?'root'@'localhost'?IDENTIFIED?BY?'new password';
+
+
+## Nginx
+#wget http://nginx.org/packages/centos/6/noarch/RPMS/nginx-release-centos-6-0.el6.ngx.noarch.rpm
+yum install nginx
+systemctl start nginx
+vim /etc/nginx/nginx.conf
+location / {
+proxy_pass http://localhost:5000; 
+}
+
+/usr/sbin/nginx -s reload
+
+
+## Anacoda
+yum install -y bzip2
+wget https://repo.continuum.io/archive/Anaconda3-5.0.1-Linux-x86_64.sh
+bash Anaconda3-5.0.1-Linux-x86_64.sh
+
+## uwsgi
+pip install uwsgi
+
+[uwsgi]
+socket = 127.0.0.1:5000
+pythonpath = /root/developer/myflask
+module = hello
+wsgi-file = /root/developer/myflask/hello.py
+callable = app
+processes = 4
+threads = 2
+daemonize = /root/developer/myflask/server.log
+
+uwsgi uwsgiconfig.ini
+
+## Nginx+uwsgi
+ location / {
+location / {
+        include uwsgi_params;
+        uwsgi_pass 127.0.0.1:5000;
+        #uwsgi_param UWSGI_PYHOME /home/reidlv/venv; 
+        uwsgi_param UWSGI_CHDIR /root/developer/myflask/;
+        uwsgi_param UWSGI_SCRIPT hello:app;
+   }
+  }
+
+/usr/sbin/nginx -s reload
