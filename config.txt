@@ -61,7 +61,7 @@ daemonize = /root/developer/myflask/server.log
 uwsgi uwsgiconfig.ini
 
 ## Nginx+uwsgi
-
+vim /etc/nginx/nginx.conf
 location / {
         include uwsgi_params;
         uwsgi_pass 127.0.0.1:5000;
