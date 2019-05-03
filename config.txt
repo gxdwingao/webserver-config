@@ -15,7 +15,9 @@ grep "password" /var/log/mysqld.log
 mysql -uroot -p
 set global validate_password_policy=0;
 ALTERUSER 'root'@'localhost' IDENTIFIED BY 'new password';
+use mysql;
 update user set host = '%' where user = 'root';
+FLUSH PRIVILEGES;
 show variables like 'character%';
 vim /etc/my.cnf
 character_set_server=utf8;
