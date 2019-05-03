@@ -68,6 +68,8 @@ location / {
         uwsgi_param UWSGI_CHDIR /root/developer/myflask/;
         uwsgi_param UWSGI_SCRIPT hello:app;
    }
-  
+location /static/ {
+       alias /root/developer/static/;
+   }
 
 /usr/sbin/nginx -s reload
