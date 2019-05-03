@@ -9,12 +9,12 @@ yum install git
 wget -i -c http://dev.mysql.com/get/mysql57-community-release-el7-10.noarch.rpm
 yum -y install mysql57-community-release-el7-10.noarch.rpm
 yum -y install mysql-community-server
-systemctl start? mysqld.service
+systemctl start mysqld.service
 #init mysql password
 grep "password" /var/log/mysqld.log
 mysql -uroot -p
 set global validate_password_policy=0;
-ALTER?USER?'root'@'localhost'?IDENTIFIED?BY?'new password';
+ALTERUSER 'root'@'localhost' IDENTIFIED BY 'new password';
 
 
 ## Nginx
