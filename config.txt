@@ -15,9 +15,11 @@ grep "password" /var/log/mysqld.log
 mysql -uroot -p
 set global validate_password_policy=0;
 ALTERUSER 'root'@'localhost' IDENTIFIED BY 'new password';
+
 use mysql;
 update user set host = '%' where user = 'root';
 FLUSH PRIVILEGES;
+
 show variables like 'character%';
 vim /etc/my.cnf
 character_set_server=utf8;
@@ -39,6 +41,10 @@ yum install -y bzip2
 wget https://repo.continuum.io/archive/Anaconda3-5.0.1-Linux-x86_64.sh
 bash Anaconda3-5.0.1-Linux-x86_64.sh
 
+conda create -n my-env python=3.6.3
+pip install uwsgi
+pip install flask
+
 ## uwsgi
 pip install uwsgi
 
@@ -55,14 +61,13 @@ daemonize = /root/developer/myflask/server.log
 uwsgi uwsgiconfig.ini
 
 ## Nginx+uwsgi
- location / {
+
 location / {
         include uwsgi_params;
         uwsgi_pass 127.0.0.1:5000;
-        #uwsgi_param UWSGI_PYHOME /home/reidlv/venv; 
         uwsgi_param UWSGI_CHDIR /root/developer/myflask/;
         uwsgi_param UWSGI_SCRIPT hello:app;
    }
-  }
+  
 
 /usr/sbin/nginx -s reload
